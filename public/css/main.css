@@ -1,0 +1,7 @@
+/**
+ Je defini la taille max des segments dans l'affichage de la fiche avec tout les details. et je fais un overflow
+*/
+.shwo_fiche_box {
+    max-height: 150px;
+    overflow: auto;
+}

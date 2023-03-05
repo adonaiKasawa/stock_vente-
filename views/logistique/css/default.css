@@ -1,0 +1,17 @@
+#div_rapport_etat_stock{
+    display:none;
+}
+
+@media print{
+    #div_rapport_etat_stock{
+        display:block;
+    }
+}
+
+.sortie-bg{
+    background-color: #f28c8c !important;
+}
+
+.entree-bg{
+    background-color: #99d5c1 !important;
+}

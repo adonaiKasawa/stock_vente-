@@ -1,0 +1,8 @@
+page {
+    includeCSS {
+        top = {$plugin.tx_sweetalert.settings.css}
+    }
+    includeJSFooter {
+        top = {$plugin.tx_sweetalert.settings.js}
+    }
+}
