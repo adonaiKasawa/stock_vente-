@@ -42,7 +42,7 @@
 <!-- ChartJS -->
 <script src="<?php echo URL; ?>public/frameworks/plugins/chart.js/Chart.min.js"></script>
 <!-- Sparkline -->
-<script src="<?php echo URL; ?>public/frameworks/plugins/sparklines/sparkline.js"></script>
+<!-- <script src="<?php echo URL; ?>public/frameworks/plugins/sparklines/sparkline.js"></script> -->
 <!-- JQVMap -->
 <script src="<?php echo URL; ?>public/frameworks/plugins/jqvmap/jquery.vmap.min.js"></script>
 <script src="<?php echo URL; ?>public/frameworks/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
@@ -68,12 +68,21 @@
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo URL; ?>public/frameworks/dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="<?php echo URL; ?>public/frameworks/dist/js/pages/dashboard.js"></script>
+<!-- <script src="<?php echo URL; ?>public/frameworks/dist/js/pages/dashboard.js"></script> -->
 
 <script>
   $(function () {
     //Initialize Select2 Elements
-    $('.select2').select2()
+    $('.select2').select2();
+    $('.clientSideDataTable').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
   });
 </script>
 <!-- Css propre au module-->

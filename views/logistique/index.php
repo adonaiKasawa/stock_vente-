@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Logistique</h1>
+            <h1 class="m-0">Stock</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Logistique</li> 
+              <li class="breadcrumb-item active">Stock</li> 
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -27,13 +27,13 @@
               <div class="card-header p-0 pt-1 border-bottom-0">
                 <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
                   <li class="nav-item">
-                    <a class="nav-link active" id="operation-stock-tab" data-toggle="pill" href="#operation-stock" role="tab" aria-controls="operation-stock" aria-selected="true">Opération sur le stock</a>
+                    <a class="nav-link active" id="operation-stock-tab" data-toggle="pill" href="#operation-stock" role="tab" aria-controls="operation-stock" aria-selected="true">Produits en stock</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="mouvement-stock-tab" data-toggle="pill" href="#mouvement-stock" role="tab" aria-controls="mouvement-stock" aria-selected="false">Mouvement du stock</a>
+                    <a class="nav-link" id="mouvement-stock-tab" data-toggle="pill" href="#mouvement-stock" role="tab" aria-controls="mouvement-stock" aria-selected="false">Produit en vente</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="bon-livraison-tab" data-toggle="pill" href="#bon-livraison" role="tab" aria-controls="bon-livraison" aria-selected="false">Les bons de livraison</a>
+                    <a class="nav-link" id="bon-livraison-tab" data-toggle="pill" href="#bon-livraison" role="tab" aria-controls="bon-livraison" aria-selected="false">Produit vendu</a>
                   </li>
                 </ul>
               </div>
@@ -46,7 +46,6 @@
                         <div class="card card-primary card-outline">
                           <div class="card-header">
                             <h3 class="card-title">
-                              <!-- <i class="fas fa-edit"></i> -->
                               Stock
                             </h3>
                             <div class="card-tools">
@@ -59,64 +58,36 @@
                               <button type="button" class="btn btn-primary btn-sm" id="btn_modal_approvisionnement">
                                 <i class="fas fa-plus"></i> Approvisionnement
                               </button>
-                              <!-- <button type="button" class="btn btn-primary btn-sm" id="btn_ajouter_produit_au_stock">
-                                <i class="fas fa-plus"></i> Ajouter un produit au stock
-                              </button> -->
                             </div>
                           </div>
                           <div class="card-body">
-                            <table class="table table-bordered" id="table_stock">
+                            <table class="table table-bordered table-striped dataTable dtr-inline clientSideDataTable" id="table_produit_en_stock">
                               <thead>
                                 <tr>
+                                  <th>#</th>
+                                  <th>Barecode</th>
                                   <th>Produit</th>
                                   <th>Catégorie</th>
                                   <th>Quantité en stock</th>
-                                  <!-- <th style="width: 40px">Actions</th> -->
+                                  <th>Entrées</th>
                                 </tr>
                               </thead>
+                              <tbody>
+                                <?php echo $this->produitStock; ?>
+                              </tbody>
                             </table>
                           </div>
                         </div>
                       </div>
                     </div>
-
-                    <div class="row">
-                      <div class="col-12">
-                        <div class="card card-primary card-outline">
-                          <div class="card-header">
-                            <h3 class="card-title">
-                              <!-- <i class="fas fa-edit"></i> -->
-                              Journal
-                            </h3>
-                          </div>
-                          <div class="card-body">
-                            <table class="table table-bordered" id="table_entree_stock">
-                              <thead>
-                                <tr>
-                                  <th>Date</th>
-                                  <th>Opération</th>
-                                  <th>Produit</th>
-                                  <th>Catégorie</th>
-                                  <th>Quantité</th>
-                                </tr>
-                              </thead>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-
                   </div>
                   <div class="tab-pane fade" id="mouvement-stock" role="tabpanel" aria-labelledby="mouvement-stock-tab">
-
                     <div class="row">
                       <div class="col-md-12">
                         <div class="card card-primary card-outline">
                           <div class="card-header">
                             <h3 class="card-title">
-                              <!-- <i class="fas fa-edit"></i> -->
-                              Entrées en stock
+                              En ventes
                             </h3>
                             <div class="card-tools">
                               <div class="input-group input-group-sm">
@@ -168,94 +139,21 @@
                             </div>
                           </div>
                           <div class="card-body">
-                            <table class="table table-bordered" id="table_mouvement_entree" width="100%">
+                            <table class="table table-bordered table-striped dataTable dtr-inline clientSideDataTable" id="table_mouvement_entree" width="100%">
                               <thead>
                                 <tr>
-                                  <th>Date</th>
+                                  <th>#</th>
+                                  <th>Barecode</th>
                                   <th>Produit</th>
                                   <th>Catégorie</th>
-                                  <th>Fournisseur</th>
-                                  <th>Quantité</th>
-                                  <!-- <th style="width: 40px">Actions</th> -->
+                                  <th>Quantité en stock</th>
                                 </tr>
                               </thead>
-                              <tbody></tbody>
-                              <tfoot>
-                                <tr>
-                                  <th colspan="4">Total</th>
-                                  <th id="mvt_entree_table_somme">Total</th>
-                                </tr>
-                              </tfoot>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="card card-primary card-outline">
-                          <div class="card-header">
-                            <h3 class="card-title">
-                              <!-- <i class="fas fa-edit"></i> -->
-                              Sortie stock
-                            </h3>
-                            <div class="card-tools">
-                              <div class="input-group input-group-sm">
-                                <select name="sortie_triType" id="sortie_triType" class="form-control mr-2 float-right">
-                                  <option value="1">Date précise</option>
-                                  <option value="2">Période</option>
-                                </select>
-                                <input type="date" id="get_sortie_mouvement_onedate" name="table_search" class="form-control mr-2 float-right" placeholder="Search">
-                                <input type="date" id="get_sortie_mouvement_debutdate" name="table_search" class="form-control mr-2 float-right" placeholder="Search">
-                                <input type="date" id="get_sortie_mouvement_findate" name="table_search" class="form-control mr-2 float-right" placeholder="Search">
-                                <select name="get_sortie_mouvement_fournisseur" id="get_sortie_mouvement_fournisseur" class="form-control mr-2 float-right">
-                                  <option value="0">Choisir une Fournisseur</option>
-                                  <?php
-                                  foreach ($this->fournisseurs as $fournisseur) {
-                                  ?>
-                                    <option value="<?php echo $fournisseur['fournisseur_id']; ?>"><?php echo $fournisseur['nom_fournisseur']; ?></option>
-                                  <?php
-                                  }
-                                  ?>
-                                </select>
-                                <select name="get_sortie_mouvement_produit" id="get_sortie_mouvement_produit" class="form-control mr-2 float-right">
-                                  <option value="0">Choisir un Produit</option>
-                                  <?php
-                                  foreach ($this->produits as $produit) {
-                                  ?>
-                                    <option value="<?php echo $produit['produit_id']; ?>"><?php echo $produit['designation']; ?></option>
-                                  <?php
-                                  }
-                                  ?>
-                                </select>
-                                <select name="get_sortie_mouvement_categorie" id="get_sortie_mouvement_categorie" class="form-control mr-2 float-right">
-                                  <option value="0">Choisir un Catégorie</option>
-                                  <?php
-                                  foreach ($this->categories as $categorie) {
-                                  ?>
-                                    <option value="<?php echo $categorie['categorie_id']; ?>"><?php echo $categorie['designation_cat']; ?></option>
-                                  <?php
-                                  }
-                                  ?>
-                                </select>
-                                <button type="button" name="table_search" id="btn_afficher_mvt_sortie_filtre" class="form-control mr-2 float-right btn-primary"> <i class="fa fa-search"></i> Afficher</button>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="card-body">
-                            <table class="table table-bordered" id="table_mouvement_sortie" width="100%">
-                              <thead>
-                                <tr>
-                                  <th>Date</th>
-                                  <th>Produit</th>
-                                  <th>Catégorie</th>
-                                  <th>Motif</th>
-                                  <th>Quantité</th>
-                                  <!-- <th style="width: 40px">Actions</th> -->
-                                </tr>
-                              </thead>
-                              <tbody></tbody>
+                              <tbody>
+                                <?php
+                                  echo $this->produit_en_vente;
+                                ?>
+                              </tbody>
                             </table>
                           </div>
                         </div>
@@ -268,20 +166,23 @@
                         <div class="card card-primary card-outline">
                           <div class="card-header">
                             <h3 class="card-title">
-                              <!-- <i class="fas fa-edit"></i> -->
-                              Bons de livraison
+                             Produit vendu
                             </h3>
                           </div>
                           <div class="card-body">
-                            <table class="table table-bordered" id="table_bon_livraison" width="100%">
+                            <table class="table table-bordered table-striped dataTable dtr-inline clientSideDataTable" width="100%">
                               <thead>
                                 <tr>
-                                  <th>Numéro du bon</th>
-                                  <th>Date de livraison</th>
-                                  <th>Fournisseur</th>
-                                  <th width="10px">Actions</th>
+                                  <th>#</th>
+                                  <th>Barecode</th>
+                                  <th>Produit</th>
+                                  <th>Catégorie</th>
+                                  <th>Quantité en stock</th>
                                 </tr>
                               </thead>
+                              <tbody>
+                                <?php echo $this->produit_vendu; ?>
+                              </tbody>
                             </table>
                           </div>
                         </div>
@@ -294,9 +195,7 @@
               <!-- /.card -->
             </div>
           </div>
-
         </div>
-
       </div>
     </section>
     <!-- /.content -->

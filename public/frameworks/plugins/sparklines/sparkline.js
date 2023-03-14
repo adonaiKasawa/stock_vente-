@@ -20,20 +20,30 @@
     return obj;
   }
 
-  function Sparkline(element, options) {
-    this.element = element;
-    this.options = extend(options || {}, Sparkline.options);
+  class Sparkline {
+    constructor(element, options) {
+      this.element = element;
+      this.options = extend(options || {}, Sparkline.options);
 
-    init: {
-      this.element.innerHTML = "<canvas></canvas>";
-      this.canvas = this.element.firstChild;
-      this.context = this.canvas.getContext("2d");
-      this.ratio = window.devicePixelRatio || 1;
+      {
+        this.element.innerHTML = "<canvas></canvas>";
+        this.canvas = this.element.firstChild;
+        this.context = this.canvas.getContext("2d");
+        this.ratio = window.devicePixelRatio || 1;
 
-      if (this.options.tooltip) {
-        this.canvas.style.position = "relative";
-        this.canvas.onmousemove = showTooltip.bind(this);
+        if (this.options.tooltip) {
+          this.canvas.style.position = "relative";
+          this.canvas.onmousemove = showTooltip.bind(this);
+        }
       }
+    }
+    static init(element, options) {
+      return new Sparkline(element, options);
+    }
+    static draw(element, points, options) {
+      var sparkline = new Sparkline(element, options);
+      sparkline.draw(points);
+      return sparkline;
     }
   }
 
@@ -63,15 +73,7 @@
     averageLine: false
   };
 
-  Sparkline.init = function (element, options) {
-    return new Sparkline(element, options);
-  };
 
-  Sparkline.draw = function (element, points, options) {
-    var sparkline = new Sparkline(element, options);
-    sparkline.draw(points);
-    return sparkline;
-  }
 
   function getY(minValue, maxValue, offsetY, height, index) {
     var range = maxValue - minValue;

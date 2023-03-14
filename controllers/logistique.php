@@ -34,19 +34,88 @@ class Logistique extends Controller
     /**
      * Affiche l'accueil du module
      */
+   
+
     function index()
     {
         $this->view->agents =  $this->model->getAll('users');
         $this->view->produits =  $this->model->get_total_from_request("SELECT * FROM  produit");
         $this->view->categories =  $this->model->getAll('categorie');
+        $this->view->produitStock =  $this->produit_en_stock();
+        $this->view->produit_en_vente = $this->produit_en_vente();
+        $this->view->produit_vendu = $this->produit_vendu();
         $this->view->render('logistique/index');
     }
 
     // Donne les donnes initiales pour le stock (DataTables)
-    function xhr_stock_DataTable()
+    function produit_en_stock()
     {
-        $this->model->xhr_stock_DataTable();
+        $get_produit_categorie = $this->model->get_produit_categorie();
+        $ouput = "";
+        $i = 1;
+        foreach ($get_produit_categorie as $key) {
+            $entreesAwaiting = $this->model->entreesAwaiting($key["produit_id"]);
+            if ($entreesAwaiting['qt'] > 0) {
+                $ouput .='
+                <tr>
+                    <td>'.$i.'</td>
+                    <td>'.$key['barcode'].'</td>
+                    <td>'.$key['designation'].'</td>
+                    <td>'.$key['designation_cat'].'</td>
+                    <td>'.$entreesAwaiting['qt'].'</td>
+                    <td>'.$entreesAwaiting['nbrEnter'].'</td>
+                </tr>';
+                $i++;
+            }
+        }
+        return  $ouput;
     }
+    // Donne les donnes initiales pour le stock (DataTables)
+    function produit_en_vente()
+    {
+        $get_produit_categorie = $this->model->get_produit_categorie();
+        $ouput = "";
+        $i = 1;
+        foreach ($get_produit_categorie as $key) {
+            $entreesSalt = $this->model->entreesSalt($key["produit_id"]);
+            if ($entreesSalt > 0) {
+                $ouput .='
+                <tr>
+                    <td>'.$i.'</td>
+                    <td>'.$key['barcode'].'</td>
+                    <td>'.$key['designation'].'</td>
+                    <td>'.$key['designation_cat'].'</td>
+                    <td>'.$entreesSalt.'</td>
+                </tr>';
+            $i++;
+            }
+            
+        }
+        return  $ouput;
+    }
+
+    function produit_vendu()
+    {
+        $get_produit_categorie = $this->model->get_produit_categorie();
+        $ouput = "";
+        $i = 1;
+        foreach ($get_produit_categorie as $key) {
+            $produit_vendu = $this->model->produit_vendu($key["produit_id"]);
+            if ($produit_vendu > 0) {
+                $ouput .='
+                <tr>
+                    <td>'.$i.'</td>
+                    <td>'.$key['barcode'].'</td>
+                    <td>'.$key['designation'].'</td>
+                    <td>'.$key['designation_cat'].'</td>
+                    <td>'.$produit_vendu.'</td>
+                </tr>';
+                $i++;
+            }
+        }
+        return  $ouput;
+    }
+
 
     // Donne les donnes initiales bons de livraison (DataTables)
     function xhr_bon_livraison_DataTable()

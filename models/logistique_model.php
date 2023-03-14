@@ -11,45 +11,49 @@ class Logistique_model extends Model
     /**
      * Renvoie la liste de toutes les elements dans le stock
      */
-    function xhr_stock_DataTable()
+    function get_produit_categorie()
     {
-        // $query = "SELECT * FROM stock_pro_somme s LEFT OUTER JOIN produit p ON s.id_produit = p.produit_id LEFT OUTER JOIN categorie c ON p.id_categorie = c.categorie_id ";
+        return $this->db->select("SELECT * FROM produit, categorie WHERE categorie.categorie_id = produit.id_categorie");
+    }
 
-        // if (isset($_POST["search"]["value"])) {
-        //     $query .= 'WHERE designation LIKE "%' . $_POST["search"]["value"] . '%" ';
-        //     $query .= 'OR designation_cat LIKE "%' . $_POST["search"]["value"] . '%" ';
-        // }
+    function entreesAwaiting($produit_id, $type = "awaiting")
+    {
+        $requete = $this->db->select("SELECT * FROM entrees WHERE id_produit =:p and status_entrees =:s", array("p" => $produit_id, "s" => $type));
+        $qt = 0;
+        $i = 0;
+        foreach ($requete as $key ) {
+            $qt += $key["qt_entrees"];
+            $i++;
+        }
+        return array("qt" => $qt, "nbrEnter" => $i, "result" => $requete);
+    }
 
-        // if (isset($_POST["order"])) {
-        //     $query .= 'ORDER BY ' . $_POST['order']['0']['column'] . ' ' . $_POST['order']['0']['dir'] . ' ';
-        // } else {
-        //     $query .= 'ORDER BY produit_id DESC ';
-        // }
-        // if ($_POST["length"] != -1) {
-        //     $query .= 'LIMIT ' . $_POST['start'] . ', ' . $_POST['length'];
-        // }
+    function entreesSalt($produit_id)
+    {
+        $sold = $this->entreesAwaiting($produit_id, 'onsale');
+        $qt = 0;
+        foreach ($sold["result"] as $key) {
+            $prix_produit = $this->db->select("SELECT * FROM prix_produit WHERE id_entrees = :entrees", array("entrees" => $key['entrees_id']));
+            $ventes = $this->db->select("SELECT * FROM ventes where id_produit_prix =:id_p_p", array("id_p_p" => $prix_produit[0]['prix_id']));
+            foreach ($ventes as $row) {
+                $qt += $row["qt_produit"];
+            }
+        }
+        return  $sold["qt"] - $qt;
 
-        // $sth = $this->db->prepare($query);
-        // $sth->execute();
-        // $result =  $sth->fetchAll();
+    }
 
-        // $data = array();
-        // $filtered_rows = $sth->rowCount();
-
-        // foreach ($result as $row) {
-        //     $sub_array = array();
-        //     $sub_array[] = $row["designation"];
-        //     $sub_array[] = $row["designation_cat"];
-        //     $sub_array[] = $row["som_entree"] - $row["som_sortie"];
-        //     $data[] = $sub_array;
-        // }
-        // $results = array(
-        //     "draw" => intval($_POST["draw"]),
-        //     "recordsTotal" => $filtered_rows,
-        //     "recordsFiltered" => $this->get_total_all_records("SELECT * FROM stock_pro_somme s LEFT OUTER JOIN produit p ON s.id_produit = p.produit_id LEFT OUTER JOIN categorie c ON p.id_categorie = c.categorie_id"),
-        //     "data" => $data
-        // );
-        // echo json_encode($results);
+    function produit_vendu($produit)
+    {
+        $entrees = $this->db->select("SELECT * FROM entrees, prix_produit  where entrees.entrees_id = prix_produit.id_entrees and entrees.id_produit =:p", array("p" => $produit));
+        $qt = 0;
+        foreach ($entrees as $key) {
+            $ventes = $this->db->select("SELECT * FROM ventes where id_produit_prix =:e", array("e" => $key["prix_id"]));
+            foreach ($ventes as $row) {
+                $qt += $row["qt_produit"];
+            }
+        }
+        return $qt;
     }
 
     /**

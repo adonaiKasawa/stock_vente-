@@ -26,7 +26,7 @@ class Home extends Controller {
         /**
          * insertion des js et css particulier pour ce module
          */
-        $this->view->js = array('home/js/default.js');
+        $this->view->js = array('home/js/default.js', "finance/js/default.js");
         $this->view->css = array('home/css/default.css');
     }
 
@@ -37,6 +37,5 @@ class Home extends Controller {
         $this->view->render('home/index');
     }
 
-
-
+    
 }

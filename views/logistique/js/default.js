@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
 
   let path = "http://localhost/ricien_stock/";
@@ -16,71 +15,6 @@ $(document).ready(function () {
   // Sortie stock
   let tab_produit_a_sortir = [];
   let tab_keys_produit_a_sortir = [];
-
-  //initialise_datatable_stock
-  let dataTable_stock = $('#table_stock').DataTable({
-    "processing": true,
-    "serverSide": true,
-    "order": [],
-    "ajax": {
-      url: path + "logistique/xhr_stock_DataTable",
-      type: "POST"
-    }
-  });
-  //initialise_datatable_bon_livraison
-  let dataTable_bon_livraison = $('#table_bon_livraison').DataTable({
-    "processing": true,
-    "serverSide": true,
-    "order": [],
-    "ajax": {
-      url: path + "logistique/xhr_bon_livraison_DataTable",
-      type: "POST"
-    }
-  });
-  //initialise_datatable_journal_stock
-  let dataTable_journal_stock = $('#table_entree_stock').DataTable({
-    "processing": true,
-    "serverSide": true,
-    "order": [],
-    "ajax": {
-      url: path + "logistique/xhr_journal_stock_DataTable",
-      type: "POST"
-    },
-    "createdRow": function (row, data, dataIndex) {
-      if (data[1] == `Sortie`) {
-        $(row).addClass('sortie-bg');
-      } else {
-        $(row).addClass('entree-bg');
-      }
-    }
-  });
-  //initialise_datatable_mouvement_entree_stock
-  let dataTable_mouvement_entree_stock = $('#table_mouvement_entree').DataTable({
-    "processing": true,
-    "serverSide": true,
-    "order": [],
-    "ajax": {
-      url: path + "logistique/xhr_mouvement_entree_stock_DataTable",
-      type: "POST"
-    },
-    drawCallback: function (settings) {
-      $('#mvt_entree_table_somme').html(settings.json.total)
-    }
-  });
-  //initialise_datatable_mouvement_sortie_stock
-  let dataTable_mouvement_sortie_stock = $('#table_mouvement_sortie').DataTable({
-    "processing": true,
-    "serverSide": true,
-    "order": [],
-    "ajax": {
-      url: path + "logistique/xhr_mouvement_sortie_stock_DataTable",
-      type: "POST"
-    },
-    // drawCallback: function (settings) {
-    //   $('#mvt_sortie_table_somme').html(settings.json.total)
-    // }
-  });
-
 
   // APPROVISIONNER LE STOCK
   // ouvrir modal ajouter categorie
@@ -458,7 +392,6 @@ $(document).ready(function () {
     $('#modal_voir_image_bon_livraison').modal('show');
   });
 
-
   // Print rapport sur etat de stock
   $(document).on('click', '#btn_print_rapport_sur_etat_stock', function (e) {
     e.preventDefault();
@@ -489,8 +422,6 @@ $(document).ready(function () {
       }
     });
   });
-
-
 
   // la fonction qui renvoie la date du jour
   function getDate() {
@@ -565,9 +496,6 @@ $(document).ready(function () {
       }
     }
   }
-
-
-
 
 });
 

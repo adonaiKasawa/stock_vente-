@@ -140,3 +140,55 @@
 
   </div>
   <!-- /.content-wrapper -->
+
+  <div id="div_print_facture">
+    <div class="row">
+      <div class="col-6">
+        <img src="<?php echo URL; ?>public/images/logo.png" alt="logo introuvable" width="180px" style="margin-left: 30px;">
+      </div>
+      <div class="col-6" style="padding-top: 20px; padding-left: 40px; ">
+        <p style="font-size: 30px; margin-bottom: 5px;">Rstock pro</p> <br>
+        <span style="font-size: 20px;">Avenue kimbao, 63b</span> <br>
+        <span style="font-size: 20px;">Kinshasa Ngiri-ngiri</span> <br>
+        <span style="font-size: 20px;">République Démocratique du Congo</span>
+      </div>
+
+      <div style="width: 100%; border-bottom: 5px solid black; margin-top: 50px;">
+      </div>
+    </div>
+
+    <div align="center">
+      <p style="font-size: 30px; margin-top: 40px; margin-bottom: 70px;">
+        Facture <br>
+        <span id="print_facture_date"></span>
+      </p>
+    </div>
+
+    <div>
+      <table class="table" id="table_print_etat_stock" style="border: 2px solid black; font-size: 25px;">
+        <thead>
+          <tr>
+            <th style="border: 2px solid black;">#</th>
+            <th style="border: 2px solid black;">Produit</th>
+            <th style="border: 2px solid black;">Quantité</th>
+            <th style="border: 2px solid black;">Prix Unitaire</th>
+            <th style="border: 2px solid black;">Total</th>
+          </tr>
+        </thead>
+        <tbody id="print_facture_table_body">
+        
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row" style="margin-top: 500px; font-size: 25px;">
+      <!-- <div class="col-6" style="text-align: center;">
+        <p>Henry Emile BRAUN <br>Président Directeur général</p>
+      </div> -->
+      <div class="col-6" style="text-align: center;">
+        <?php echo Session::get('nom') . ' ' . Session::get('postnom') . ' ' . Session::get('prenom'); ?><br>
+        <span>Charger de la caisse</span>
+      </div>
+    </div>
+
+  </div>

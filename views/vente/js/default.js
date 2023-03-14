@@ -8,6 +8,8 @@ $(document).ready(function () {
     showConfirmButton: false,
     timer: 5000
   });
+  getAllVente();
+  getAllVenteByFacture();
 
   // pour l'ajout commande
   let tab_commandes_to_add = [];
@@ -24,12 +26,12 @@ $(document).ready(function () {
     }
   });
 
-
   //AJOUTER COMMANDE
   // Modal
   $(document).on('click', '#btn_modal_ajout_commande', function (e) {
     $('#modal_ajout_commande').modal('show');
   });
+
   // Ajouter les elements au panier ajout commande
   $(document).on('click', '#ajouter_produit_panier', function (e) {
     e.preventDefault();
@@ -54,12 +56,10 @@ $(document).ready(function () {
         title: 'Le produit est déjà sur la liste'
       });
     } else {
-
       let tab_ajout_commande_body = ``;
+      let prixTotal = 0;
       tab_commandes_to_add.push([produit_id, selected_produit_nom, ajout_quantite, prix_by_produit]);
       tab_keys_commandes_to_add.push(produit_id);
-      console.log("tab_commandes_to_add:", tab_commandes_to_add);
-      console.log("tab_keys_commandes_to_add:", tab_keys_commandes_to_add);
       tab_commandes_to_add.forEach((prod, index) => {
         tab_ajout_commande_body += `
                     <tr class="row_tab_produit_sortir" id="row_tab_produit_sortir">
@@ -73,10 +73,14 @@ $(document).ready(function () {
                             </td>
                         </tr>
                     `;
+        prixTotal += prod[3] * prod[2];
       });
+      tab_ajout_commande_body += `<tr>
+      <td colspan="4"><b>Total à payer</b></td>
+      <td colspan="2"><b>${prixTotal}FC</b></td>
+    </tr>`;
       $('#body_table_produit_commande').html(tab_ajout_commande_body);
 
-      // $('#on_sale_produit').val('NULL');
       $('#on_sale_quantite').val('');
       $("#view_posibilite_to_sale").html(``);
     }
@@ -157,32 +161,82 @@ $(document).ready(function () {
         "qt": element[2]
       });
     });
-    $.ajax({
-      url: `${path}vente/submit_vente`,
-      type: "POST",
-      data: {
-        prodQt: produits,
-        action: "axssmvslpkjdfiowjfscnxlzkdmczx7xcc"
-      },
-      success: function (data) {
-        console.log(data);
-        if (data === "200") {
-          Toast.fire({
-            icon: 'success',
-            title: 'La vente se bien passe'
-          });
-        } else {
-          Toast.fire({
-            icon: 'error',
-            title: 'Une erreur se produit lors de la vente, contactez l\'administrateur'
-          });
+    if (tab_commandes_to_add.length > 0) {
+      $.ajax({
+        url: `${path}vente/submit_vente`,
+        type: "POST",
+        data: {
+          prodQt: produits,
+          action: "axssmvslpkjdfiowjfscnxlzkdmczx7xcc"
+        },
+        success: function (data) {
+          console.log(data);
+          if (data === "200") {
+            let prixTotal = 0;
+            let body_content = ``;
+            tab_commandes_to_add.forEach((prod, i) => {
+              body_content += `
+                  <tr>
+                    <td style="border: 2px solid black;">${i + 1}</td>
+                    <td style="border: 2px solid black;">${prod[1]}</td>
+                    <td style="border: 2px solid black;">${prod[2]}</td>
+                    <td style="border: 2px solid black;">${prod[3]}FC</td>
+                    <td style="border: 2px solid black;">${prod[3] * prod[2]}FC</td>
+                  </tr>`;
+              prixTotal += prod[3] * prod[2];
+            });
+            body_content += `<tr>
+              <td colspan="3" style="border: 2px solid black;"><b>Total à payer</b></td>
+              <td colspan="2" style="border: 2px solid black;"><b>${prixTotal}FC</b></td>
+            </tr>`;
+            $('#print_facture_table_body').html(body_content);
+            $("#print_facture_date").html(getDateFrForat());
+            $("#div_print_facture").printThis();
+
+            tab_commandes_to_add = [];
+            tab_keys_commandes_to_add = [];
+            $('#body_table_produit_commande').html(``);
+            Toast.fire({
+              icon: 'success',
+              title: 'La vente se bien passe'
+            });
+          } else {
+            Toast.fire({
+              icon: 'error',
+              title: 'Une erreur se produit lors de la vente, contactez l\'administrateur'
+            });
+          }
         }
-      }
-    })
+      });
+    } else {
+      Toast.fire({
+        icon: 'error',
+        title: `Vous n'avez rien dans le panier!`
+      });
+    }
+
   });
 
+  function getAllVente() {
+    $.ajax({
+      url: `${path}vente/getAllVente`,
+      type: "POST",
+      success: function(data){
+        $("#getAllVenteBodyTable").html(data)
+      }
+    })
+  }
 
-
+  function getAllVenteByFacture() {
+    $.ajax({
+      url: `${path}vente/getAllVenteByFacture`,
+      type: "POST",
+      success: function(data){
+        console.log(data);
+        $("#getAllVenteByFactureBodyTable").html(data)
+      }
+    })
+  }
 
 
 
@@ -384,6 +438,7 @@ $(document).ready(function () {
     today = yyyy + '-' + mm + '-' + dd;
     return today;
   }
+
   function getDateFrForat() {
     var today = new Date();
     var dd = today.getDate();
@@ -431,5 +486,38 @@ $(document).ready(function () {
       type: "POST"
     }
   });
+
+  function getDate() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+      dd = '0' + dd
+    }
+    if (mm < 10) {
+      mm = '0' + mm
+    }
+    today = yyyy + '-' + mm + '-' + dd;
+    return today;
+  }
+
+  function getDateFrForat() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    var h = today.getHours();
+    var min = today.getMinutes();
+    var sec = today.getSeconds();
+    if (dd < 10) {
+      dd = '0' + dd
+    }
+    if (mm < 10) {
+      mm = '0' + mm
+    }
+    today = dd + '-' + mm + '-' + yyyy + ' '+ h +':'+min+':'+sec;
+    return today;
+  }
 
 });

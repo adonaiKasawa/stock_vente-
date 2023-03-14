@@ -2,8 +2,15 @@
     display:none;
 }
 
+#div_print_facture{
+    display: none;
+}
+
 @media print{
     #div_print_commande{
+        display:block;
+    }
+    #div_print_facture{
         display:block;
     }
 }

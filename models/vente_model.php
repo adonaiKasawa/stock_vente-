@@ -36,19 +36,19 @@ class Vente_model extends Model
     array("id_produit" => $produit, "id_entree" => $id_entree));
   }
 
-  function xhr_vente_DataTable()
+  function getVents()
   {
-    
-  }
-
-  function getAllPanier()
-  {
-    
+    return $this->db->select("SELECT * FROM ventes, prix_produit, entrees, produit where ventes.id_produit_prix = prix_produit.prix_id and prix_produit.id_entrees = entrees.entrees_id and entrees.id_produit = produit.produit_id");
   }
 
   function update_entree(array $data, int $id_entree)
   {
     return $this->db->update("entrees", $data, "entrees_id = $id_entree");   
+  }
+
+  function getUser(int $id_user)
+  {
+    return $this->db->select("SELECT * FROM users WHERE user_id=:id",array("id" => $id_user));
   }
   
 }

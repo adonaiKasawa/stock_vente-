@@ -1,9 +1,0 @@
-#div_print_commande{
-    display:none;
-}
-
-@media print{
-    #div_print_commande{
-        display:block;
-    }
-}

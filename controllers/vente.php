@@ -48,10 +48,7 @@ class Vente extends Controller
   function submit_vente()
   {
     if(isset($_POST["action"]) == "axssmvslpkjdfiowjfscnxlzkdmczx7xcc"){
-      // $id_client = htmlspecialchars($_POST["client"]);
       $prodQt = $_POST['prodQt'];
-      // print_r($prodQt);
-      // die;
       $code = $this->str_random(16);
       if (!empty($prodQt)) {
         $ouput = "";
@@ -128,13 +125,98 @@ class Vente extends Controller
     }
   }
 
-  function xhr_vente_DataTable()
+  function getAllVente()
   {
-    $this->model->xhr_vente_DataTable();
+    $ventes = $this->model->getVents();
+    $ouput = "";
+    $prixTotal = 0;
+    if (!empty($ventes)) {
+      $i = 1;
+      foreach ($ventes as $key) {
+        $prixTotal += $key["prix"] * $key["qt_produit"];
+        $ouput .= '<tr>
+          <td>'.$i.'</td>
+          <td>'.$key["created_vente"].'</td>
+          <td>'.$key["designation"].'</td>
+          <td>'.$key["qt_produit"].'</td>
+          <td>'.$key["prix"].'FC</td>
+          <td>'.$key["prix"] * $key["qt_produit"].'FC</td>
+          <td>'.$key["code"].'</td>
+          <td>'.$key["id_user"].'</td>
+          <td>
+            <button type="button" class="btn btn-danger btn-xs btn_remove_produit_de_la_liste_to_add" id="0"><i class="fa fa-times"></i></button>
+          </td>
+        </tr>';
+        $i++;
+      }
+    }
+    $ouput .= ' <tr>
+      <td colspan="5"><b>Total</b></td>
+      <td colspan="1" class="bg-primary" style="font-size: 25px"><b>'.$prixTotal.'FC</b></td>
+      <td colspan="3" class="bg-secondary"></td>
+    </tr>';
+    echo $ouput;
   }
+
+  function getAllVenteByFacture()
+  {
+    $ventes = $this->model->getVents();
+    $codes = array();
+    $ouput = "";
+    $grTotal = 0;
+    
+    if (!empty($ventes)) {
+      foreach ($ventes as $key) {
+        if (!in_array($key["code"], $codes)) {
+          $codes[] = $key["code"];
+        }
+      }
+    }
+  
+    if (!empty($codes)) {
+      $i = 1;
+      foreach ($codes as $key) {
+        $r = array_filter($ventes, function ($item) use ($key) {
+          return $item["code"] == $key;
+        });
+        $article = 0;
+        $prixTotal = 0;
+        $created_vente = "";
+        $user = "";
+        foreach ($r as $row) {
+          $prixTotal += $row["prix"] * $row["qt_produit"];
+          $created_vente = $row["created_vente"];
+          $article++;
+          $getUser = $this->model->getUser($row["id_user"]);
+          $user = $getUser[0]["nom_user"]." ".$getUser[0]["postnom_user"]." ".$getUser[0]["prenom_user"];
+        }
+        $ouput .= '<tr>
+          <td>'.$i.'</td>
+          <td>'.$created_vente.'</td>
+          <td>'.$key.'</td>
+          <td>'.$article.'</td>
+          <td>'.$prixTotal.'FC</td>
+          <td>'.$user.'</td>
+          <td>
+            <button type="button" data-toggle="modal" data-target="#modal_voir_detail_achat" class="btn btn-primary btn-xs btn_remove_produit_de_la_liste_to_add" id="0"><i class="fa fa-eye"></i></button>
+            <button type="button" class="btn btn-danger btn-xs btn_remove_produit_de_la_liste_to_add" id="0"><i class="fa fa-times"></i></button>
+          </td>
+        </tr>';
+        $i++;
+        $grTotal += $prixTotal;
+      }
+    }
+    $ouput .= ' <tr>
+      <td colspan="4"><b>Total</b></td>
+      <td colspan="1" class="bg-primary" style="font-size: 25px"><b>'.$grTotal.'FC</b></td>
+      <td colspan="2" class="bg-secondary"></td>
+    </tr>';
+    echo $ouput;
+  }
+  
 }
 
-
+// cenasepef 
 
 
 
